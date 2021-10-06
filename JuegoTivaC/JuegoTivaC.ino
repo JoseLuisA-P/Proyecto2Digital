@@ -2,6 +2,10 @@
 #include "SDcard.h"
 #include <SPI.h>
 #include <SD.h>
+#include "Personaje.h"
+
+Personaje player1(30,30,30,100); //objeto del personaje 1
+
 
 File lectura; //para leer un archivo de la SD
 uint8_t animacion;
@@ -27,26 +31,14 @@ void setup() {
   lectura.close();
   delay(1000);
 
-  
-
+  player1.init();
 }
   
 
 void loop() {
-  switch(animacion){
-    case 0:
-      lectura = SD.open("Frame1.TXT", FILE_READ);
-      spriteSD(lectura,100,100);
-      lectura.close();
-      break;
-    case 1:
-      lectura = SD.open("Frame2.TXT", FILE_READ);
-      spriteSD(lectura,100,100);
-      lectura.close();
-      break;
-    }
+    player1.updateSp();
     delay(100);
     animacion ++;
     if(animacion > 1) animacion = 0;
-  
+    player1.pose = animacion;
 }
