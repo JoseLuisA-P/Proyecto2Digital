@@ -11,8 +11,10 @@ File lectura; //para leer un archivo de la SD
 uint8_t animacion = 0; //mover las animaciones de los personajes
 uint8_t mensel = 0; //seleccionar el menu
 bool onete; //utilizado para activar los eventos de una sola vez
-unsigned long prevTime = 0;
-uint8_t intervalo;
+unsigned long prevTime = 0; //para el delay sin detener la ejecucion
+uint8_t intervalo; //intervalo para los cambios de bitmap en los personajes o titulos que titilan
+int inMes; //mensaje obtenido por el serial
+short P1sel, P2sel; //seleccionar los personajes y atributos de cada uno
 
 void setup() {
   Serial.begin(9600);
@@ -47,24 +49,88 @@ void loop() {
     }
     
   switch(mensel){
-    case 0:
+    case 0: //pantalla de menu
       if(onete) { LCD_Print("Inicio del juego",30,50,2,0x0000,0x62AA); onete = 0;} //para imprimir una vez el texto de inicio
       
       if(animacion)LCD_Print("Presiona el boton para comenzar",30,150,1,0x0000,0x62AA);
       else FillRect(30,150,250,30,0x62AA); //animacion del texto de presionar START para ir a seleccion de personajes
       if(animacion > 1) animacion = 0; //dos estados para presionar, se modifica dependiendo la pantalla desplegada
+
+      if(Serial.available()){ //leer el dato enviado por el control
+        inMes = Serial.read();
+        }
+
+      if(inMes == '1')mensel = 1; //al presionar start cambia de pantalla
       break;
-    case 1:
-    
+      
+    case 1: //pantalla de seleccion de personajes
+      if(!onete){  //preparando el evento de una vez para la pelea y colocando la pantalla de seleccion
+        LCD_Clear(0x62AA);
+        LCD_Print("SELECCIONA TU JUGADOR",80,30,1,0x0000,0x62AA);
+        printPlayers();
+        onete= 1; 
+        inMes = 0;
+        }
+      if(Serial.available()){ //leer el dato enviado por el control
+        inMes = Serial.read();
+        switch(inMes){ //dependiendo del valor seleccionado, asi cambia la seleccion del personaje
+          case '2':
+            P1sel ++;
+            if(P1sel>1)P1sel = 0; //solo dos estados de cambio
+            break;
+          case '3':
+            P2sel ++;
+            if(P2sel>1)P2sel = 0; //solo dos estados
+            break;
+          }
+          choosePlayers();
+          inMes = 0;
+        }
       break;
     }
-
-    /*
-    player1.updateSp();
-    player2.updateSp();
-    delay(10);
-    animacion ++;
-    if(animacion > 1) animacion = 0;
-    player1.pose = animacion;
-    player2.pose = animacion;*/
 }
+
+
+void printPlayers(){ //Colocar los bitmaps de los personajes en la pantalla
+      lectura = SD.open("Frame1.TXT", FILE_READ);
+      spriteSD(lectura,100,60);
+      lectura.close();
+
+      lectura = SD.open("Frame2.TXT", FILE_READ);
+      spriteSD(lectura,200,60);
+      lectura.close();
+
+      lectura = SD.open("Frame1.TXT", FILE_READ);
+      spriteSD(lectura,100,120);
+      lectura.close();
+      
+      lectura = SD.open("Frame1.TXT", FILE_READ);
+      spriteSD(lectura,200,120);
+      lectura.close();
+  
+  }
+
+void choosePlayers(){
+  switch(P1sel){
+    case 0: //seleccionar el segundo personaje
+      Rect(100,60,32,32,0x00);
+      Rect(100,120,32,32,0xE841);
+      break;
+    case 1: //seleccionar el primer personaje
+      Rect(100,60,32,32,0xE841);
+      Rect(100,120,32,32,0x00);
+      break;
+    
+    }
+
+  switch(P2sel){
+    case 0: //seleccionar el segundo personaje
+      Rect(200,60,32,32,0x00);
+      Rect(200,120,32,32,0xE841);
+      break;
+    case 1: //seleccionar el primer personaje
+      Rect(200,60,32,32,0xE841);
+      Rect(200,120,32,32,0x00);
+      break;
+    }
+  }
