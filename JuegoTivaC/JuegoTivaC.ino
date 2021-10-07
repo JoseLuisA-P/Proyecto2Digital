@@ -4,7 +4,7 @@
 #include <SD.h>
 #include "Personaje.h"
 
-Personaje player1(1,20,30,30,120); //objeto del personaje 1
+Personaje player1(0,20,30,30,120); //objeto del personaje 1
 Personaje player2(2,200,30,200,120); //objeto del personaje 2
 
 File lectura; //para leer un archivo de la SD
@@ -49,7 +49,11 @@ void loop() {
     }
     
   switch(mensel){
-    case 0: //pantalla de menu
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////pantalla de menu
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    case 0: 
       if(onete) { LCD_Print("Inicio del juego",30,50,2,0x0000,0x62AA); onete = 0;} //para imprimir una vez el texto de inicio
       
       if(animacion)LCD_Print("Presiona el boton para comenzar",30,150,1,0x0000,0x62AA);
@@ -62,8 +66,11 @@ void loop() {
 
       if(inMes == '1')mensel = 1; //al presionar start cambia de pantalla
       break;
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ //pantalla de seleccion de personajes
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       
-    case 1: //pantalla de seleccion de personajes
+    case 1:
       if(!onete){  //preparando el evento de una vez para la pelea y colocando la pantalla de seleccion
         LCD_Clear(0x62AA);
         LCD_Print("SELECCIONA TU JUGADOR",80,30,1,0x0000,0x62AA);
@@ -93,10 +100,14 @@ void loop() {
           player1.init();
           player2.init();
           inMes = 0;
-          intervalo = 500;
+          intervalo = 200;
           }
         else inMes = 0;
       break;
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ //pantalla de la pelea de personajes
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     case 2: //pantalla de la pelea 
       player1.updateSp();
@@ -109,13 +120,16 @@ void loop() {
     }
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///// Funciones utilizadas para desplegar personajes, objetos o seleccion.
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void printPlayers(){ //Colocar los bitmaps de los personajes en la pantalla
-      lectura = SD.open("Frame1.TXT", FILE_READ);
+      lectura = SD.open("P1S1UP.TXT", FILE_READ);
       spriteSD(lectura,100,60);
       lectura.close();
 
-      lectura = SD.open("Frame2.TXT", FILE_READ);
+      lectura = SD.open("P2S2UP.TXT", FILE_READ);
       spriteSD(lectura,200,60);
       lectura.close();
 
