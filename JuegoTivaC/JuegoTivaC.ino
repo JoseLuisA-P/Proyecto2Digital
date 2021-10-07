@@ -4,8 +4,8 @@
 #include <SD.h>
 #include "Personaje.h"
 
-Personaje player1(20,30,30,120); //objeto del personaje 1
-Personaje player2(200,30,200,120); //objeto del personaje 2
+Personaje player1(1,20,30,30,120); //objeto del personaje 1
+Personaje player2(2,200,30,200,120); //objeto del personaje 2
 
 File lectura; //para leer un archivo de la SD
 uint8_t animacion = 0; //mover las animaciones de los personajes
@@ -75,18 +75,37 @@ void loop() {
         inMes = Serial.read();
         switch(inMes){ //dependiendo del valor seleccionado, asi cambia la seleccion del personaje
           case '2':
-            P1sel ++;
-            if(P1sel>1)P1sel = 0; //solo dos estados de cambio
+            player1.skinsel ++;
+            if(player1.skinsel>1)player1.skinsel = 0; //solo dos estados de cambio
             break;
           case '3':
-            P2sel ++;
-            if(P2sel>1)P2sel = 0; //solo dos estados
+            player2.skinsel ++;
+            if(player2.skinsel >1)player2.skinsel = 0; //solo dos estados
             break;
           }
           choosePlayers();
-          inMes = 0;
+          
         }
+
+        if (inMes == '9'){
+          mensel = 2;
+          LCD_Clear(0x62AA);
+          player1.init();
+          player2.init();
+          inMes = 0;
+          intervalo = 500;
+          }
+        else inMes = 0;
       break;
+
+    case 2: //pantalla de la pelea 
+      player1.updateSp();
+      player2.updateSp();
+      player1.pose = animacion;
+      player2.pose = animacion;
+      if(animacion > 1) animacion = 0;
+      break;
+      
     }
 }
 
@@ -111,7 +130,7 @@ void printPlayers(){ //Colocar los bitmaps de los personajes en la pantalla
   }
 
 void choosePlayers(){
-  switch(P1sel){
+  switch(player1.skinsel){
     case 0: //seleccionar el segundo personaje
       Rect(100,60,32,32,0x00);
       Rect(100,120,32,32,0xE841);
@@ -123,7 +142,7 @@ void choosePlayers(){
     
     }
 
-  switch(P2sel){
+  switch(player2.skinsel){
     case 0: //seleccionar el segundo personaje
       Rect(200,60,32,32,0x00);
       Rect(200,120,32,32,0xE841);
