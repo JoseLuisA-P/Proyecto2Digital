@@ -4,8 +4,8 @@
 #include <SD.h>
 #include "Personaje.h"
 
-Personaje player1(30,30,30,100); //objeto del personaje 1
-
+Personaje player1(20,30,30,120); //objeto del personaje 1
+Personaje player2(200,30,200,120); //objeto del personaje 2
 
 File lectura; //para leer un archivo de la SD
 uint8_t animacion;
@@ -32,13 +32,16 @@ void setup() {
   delay(1000);
 
   player1.init();
+  player2.init();
 }
   
 
 void loop() {
     player1.updateSp();
-    delay(100);
+    player2.updateSp();
+    delay(10);
     animacion ++;
     if(animacion > 1) animacion = 0;
     player1.pose = animacion;
+    player2.pose = animacion;
 }
