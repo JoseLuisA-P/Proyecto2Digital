@@ -13,11 +13,13 @@ class Personaje{
     uint8_t Numb; //para indicar el numero de jugador que es
     
   public:
-    uint8_t pose;
-    short skinsel;
+    uint8_t pose; //que pose tomara
+    short skinsel; //que skin se va a seleccionar
+    uint8_t health; //vida del personaje
     Personaje(uint8_t Numb, uint8_t HBposx, uint8_t HBposy, uint8_t Posx, uint8_t Posy);
     void init(); //imprime la barra de salud
     void updateSp(); //actualizar el sprite del personaje para crear el movimiento
+    void takedamage(uint8_t dano); //cuando el personaje recibe daño
   };
 
 

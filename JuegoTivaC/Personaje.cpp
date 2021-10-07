@@ -3,7 +3,7 @@
 #include "TFT_ili9341.h"
 
 File lectura2;
-
+//constructor
 Personaje::Personaje(uint8_t Numb, uint8_t HBposx, uint8_t HBposy, uint8_t Posx, uint8_t Posy){
   //indica que el atributo es el mismo que lo declarado en el inicio
   this -> Numb = Numb;
@@ -13,9 +13,10 @@ Personaje::Personaje(uint8_t Numb, uint8_t HBposx, uint8_t HBposy, uint8_t Posx,
   this -> Posy = Posy;
   }
 
+//inicializar el personaje
 void Personaje::init(){
-  FillRect(HBposx,HBposy,100,30,0xD0A2);
-  
+  FillRect(HBposx,HBposy,100,30,0xD0A2); //colocar la barra de vida donde se indico
+  this -> health = 100; //colocar su vida al maximo
   }
 
 void Personaje::updateSp(){
@@ -97,4 +98,11 @@ void Personaje::updateSp(){
   
   }
   
+  }
+
+
+void Personaje::takedamage(uint8_t dano){
+  health = health - dano;
+  if(health>0)FillRect((HBposx+health),HBposy,100-health,30,0x00); //colorea poco a poco la barra de vida para simular daño
+  else FillRect(HBposx,HBposy,100,30,0x00);
   }

@@ -115,6 +115,16 @@ void loop() {
       player1.pose = animacion;
       player2.pose = animacion;
       if(animacion > 1) animacion = 0;
+      if(Serial.available()){ //leer el dato enviado por el control
+        inMes = Serial.read();
+      switch(inMes){
+      case '5':
+        player1.takedamage(20);
+        break;
+      }
+      inMes = 0;
+      }
+     
       break;
       
     }
