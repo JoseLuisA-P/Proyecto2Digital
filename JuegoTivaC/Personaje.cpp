@@ -102,7 +102,8 @@ void Personaje::updateSp(){
 
 
 void Personaje::takedamage(uint8_t dano){
-  health = health - dano;
+  if(health> dano)health = health - dano;
+  else health = 0;
   if(health>0)FillRect((HBposx+health),HBposy,100-health,30,0x00); //colorea poco a poco la barra de vida para simular daño
   else FillRect(HBposx,HBposy,100,30,0x00);
   }

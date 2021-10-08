@@ -12,7 +12,7 @@ uint8_t animacion = 0; //mover las animaciones de los personajes
 uint8_t mensel = 0; //seleccionar el menu
 bool onete; //utilizado para activar los eventos de una sola vez
 unsigned long prevTime = 0; //para el delay sin detener la ejecucion
-uint8_t intervalo; //intervalo para los cambios de bitmap en los personajes o titulos que titilan
+int intervalo; //intervalo para los cambios de bitmap en los personajes o titulos que titilan
 int inMes; //mensaje obtenido por el serial
 short P1sel, P2sel; //seleccionar los personajes y atributos de cada uno
 
@@ -119,12 +119,52 @@ void loop() {
         inMes = Serial.read();
       switch(inMes){
       case '5':
-        player1.takedamage(20);
+        player1.takedamage(15);
+        break;
+      case '6':
+        player2.takedamage(20);
         break;
       }
       inMes = 0;
       }
-     
+
+      if(player1.health == 0)mensel = 3;
+      if(player2.health == 0)mensel = 4;
+      
+      break;
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ //pantalla de vistoria de uno de los personajes
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    case 3:
+      LCD_Clear(0x62AA);
+      LCD_Print("Gano2",100,120,2,0x00,0x62AA);
+      mensel = 5;
+      intervalo = 500;
+      break;
+    case 4:
+      LCD_Clear(0x62AA);
+      LCD_Print("Gano1",100,120,2,0x00,0x62AA);
+      mensel = 5;
+      intervalo = 500;
+      break;
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ //pantalla de reinicio y para reiniciar los parametros de los jugadores
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    case 5:
+      if(animacion)LCD_Print("Presiona start volver",30,150,1,0x0000,0x62AA);
+      else FillRect(30,150,250,30,0x62AA); //animacion del texto de presionar START para ir a seleccion de personajes
+      if(animacion > 1) animacion = 0;
+      if(Serial.available()) inMes = Serial.read();
+
+      if(inMes == '1'){
+        mensel = 0;
+        LCD_Clear(0x62AA);
+        player1.health = 100;
+        player2.health = 100;
+      }
+      else inMes = 0;
+      
       break;
       
     }
