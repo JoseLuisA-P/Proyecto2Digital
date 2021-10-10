@@ -186,7 +186,7 @@ void loop() {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void printPlayers(){ //Colocar los bitmaps de los personajes en la pantalla
-      lectura = SD.open("P1S1UP.TXT", FILE_READ);
+      lectura = SD.open("P1S2DW.TXT", FILE_READ);
       spriteSD(lectura,100,60);
       lectura.close();
 

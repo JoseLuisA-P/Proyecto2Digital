@@ -28,7 +28,10 @@ void Personaje::updateSp(){
   const char* dato6 = "P2S2DW.TXT";
   const char* dato7 = "P1S1DAM.TXT";
   const char* dato8 = "P1S1HIT.TXT";
-
+  const char* dato9 = "P1S2UP.TXT";
+  const char* dato10 = "P1S2DW.TXT";
+  const char* dato11 = "P1S2HIT.TXT";
+  
   switch(Numb+skinsel){
   
   case 0:  //skin 1 del personaje 1
@@ -52,12 +55,12 @@ void Personaje::updateSp(){
    
   switch(pose){
     case 0: //pose 1
-      lectura2 = SD.open(dato3, FILE_READ);
+      lectura2 = SD.open(dato10, FILE_READ);
       spriteSD(lectura2,Posx,Posy);
       lectura2.close();
     break;
     case 1: //pose 2
-      lectura2 = SD.open(dato4, FILE_READ);
+      lectura2 = SD.open(dato9, FILE_READ);
       spriteSD(lectura2,Posx,Posy);
       lectura2.close();
     break;
@@ -67,7 +70,7 @@ void Personaje::updateSp(){
       lectura2.close();
       break;
     case 4: //golpea
-      lectura2 = SD.open(dato8, FILE_READ);
+      lectura2 = SD.open(dato11, FILE_READ);
       spriteSD(lectura2,Posx,Posy);
       lectura2.close();
       break;
