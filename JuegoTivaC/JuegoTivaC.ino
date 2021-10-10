@@ -101,6 +101,7 @@ void loop() {
           player2.init();
           inMes = 0;
           intervalo = 200;
+          animacion = 0;
           }
         else inMes = 0;
       break;
@@ -119,10 +120,20 @@ void loop() {
         inMes = Serial.read();
       switch(inMes){
       case '5':
-        player1.takedamage(15);
+        player2.pose = 4;
+        player2.updateSp();
+        player1.pose = 3;
+        player1.updateSp();
+        player1.takedamage(20);
+        delay(200);
         break;
       case '6':
+        player1.pose = 4;
+        player1.updateSp();
+        player2.pose = 3;
+        player2.updateSp();
         player2.takedamage(20);
+        delay(200);
         break;
       }
       inMes = 0;
@@ -133,7 +144,7 @@ void loop() {
       
       break;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
- //pantalla de vistoria de uno de los personajes
+ //pantalla de victoria de uno de los personajes
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     case 3:
