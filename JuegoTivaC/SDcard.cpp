@@ -41,12 +41,12 @@ int hex2bin(char c){ //convertir los hex del texto en binario
     return c - 'a' + 10 ;
 }
 
-void bitmapSD(File f, int w, int h){
+void bitmapSD(File f,unsigned int w,unsigned int h,unsigned int posx,unsigned int posy){
   LCD_CMD(0x02c); //write_memory_start
   digitalWrite(LCD_RS, HIGH);
   digitalWrite(LCD_CS, LOW);
   
-  SetWindows(0,0,w-1,h-1); //para indicar que escribe en toda la pantalla
+  SetWindows(posx,posy,posx+w-1,posy+h-1); //para indicar que escribe en toda la pantalla
   
   uint8_t color; //almacenar el valor entero del dato
   uint8_t color2; //almacenar el valor entero del dato

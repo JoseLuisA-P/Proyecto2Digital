@@ -4,7 +4,7 @@
 #include <SD.h>
 #include "Personaje.h"
 
-Personaje player1(0,20,30,30,120); //objeto del personaje 1
+Personaje player1(0,30,30,30,120); //objeto del personaje 1
 Personaje player2(2,200,30,200,120); //objeto del personaje 2
 
 File lectura; //para leer un archivo de la SD
@@ -15,6 +15,8 @@ unsigned long prevTime = 0; //para el delay sin detener la ejecucion
 int intervalo; //intervalo para los cambios de bitmap en los personajes o titulos que titilan
 int inMes; //mensaje obtenido por el serial
 short P1sel, P2sel; //seleccionar los personajes y atributos de cada uno
+short atck1,atck2; //seleccionar los ataques de los personajes
+uint8_t atckVal; //valor del ataque tipo random
 
 void setup() {
   Serial.begin(9600);
@@ -99,6 +101,8 @@ void loop() {
           LCD_Clear(0x62AA);
           player1.init();
           player2.init();
+          printIcon();
+          updateLife();
           inMes = 0;
           intervalo = 200;
           animacion = 0;
@@ -111,6 +115,8 @@ void loop() {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     case 2: //pantalla de la pelea 
+      randomSeed(prevTime);
+      atckVal = random(10,15);
       player1.updateSp();
       player2.updateSp();
       player1.pose = animacion;
@@ -124,7 +130,8 @@ void loop() {
         player2.updateSp();
         player1.pose = 3;
         player1.updateSp();
-        player1.takedamage(20);
+        player1.takedamage(atckVal);
+        updateLife();
         delay(200);
         break;
       case '6':
@@ -132,7 +139,8 @@ void loop() {
         player1.updateSp();
         player2.pose = 3;
         player2.updateSp();
-        player2.takedamage(20);
+        player2.takedamage(atckVal);
+        updateLife();
         delay(200);
         break;
       }
@@ -204,7 +212,32 @@ void printPlayers(){ //Colocar los bitmaps de los personajes en la pantalla
   
   }
 
+void printIcon(){ //imprimir los iconos de ataque, vida y otros de la pantalla
+    lectura = SD.open("HPICON.TXT", FILE_READ);
+    bitmapSD(lectura,16,16,14,30);
+    bitmapSD(lectura,16,16,184,30);
+    lectura.close();
+    
+  }
+
+void updateLife(){ //actualizar los valores de vida en cada ataque
+  //imprime los valores de la salud restante de cada personaje, para sobreponer los valores y los cambios de centenas a decenas
+  //y a unidad, se borra en cada actualizacion para imprimir el valor en limpio
+  String vida1 = String(player1.health);
+  if(player1.health >= 100)LCD_Print(vida1,30,46,1,0x0000,0x62AA);
+  if(player1.health>=10 & player1.health<100){FillRect(30,46,40,10,0x62AA); LCD_Print(vida1,35,46,1,0x000,0x62AA);}
+  if (player1.health<10) {FillRect(30,46,40,10,0x62AA); LCD_Print(vida1,45,46,1,0x000,0x62AA);}
+  LCD_Print("/100",55,46,1,0x0000,0x62AA);
+  
+  String vida2 = String(player2.health);
+  if(player2.health >= 100)LCD_Print(vida2,200,46,1,0x0000,0x62AA);
+  if(player2.health>=10 & player2.health<100){FillRect(200,46,40,10,0x62AA); LCD_Print(vida2,205,46,1,0x000,0x62AA);}
+  if (player2.health<10) {FillRect(200,46,40,10,0x62AA); LCD_Print(vida2,215,46,1,0x000,0x62AA);}
+  LCD_Print("/100",225,46,1,0x0000,0x62AA);
+  }
+
 void choosePlayers(){
+  //imprime cuadros alrededor de la seleccion de personaje, para indicar que personaje se utilizara en la pelea
   switch(player1.skinsel){
     case 0: //seleccionar el segundo personaje
       Rect(100,60,32,32,0x00);

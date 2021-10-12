@@ -15,7 +15,7 @@ Personaje::Personaje(uint8_t Numb, uint8_t HBposx, uint8_t HBposy, uint8_t Posx,
 
 //inicializar el personaje
 void Personaje::init(){
-  FillRect(HBposx,HBposy,100,30,0xD0A2); //colocar la barra de vida donde se indico
+  FillRect(HBposx,HBposy,100,16,0xD0A2); //colocar la barra de vida donde se indico
   this -> health = 100; //colocar su vida al maximo
   }
 
@@ -130,6 +130,6 @@ void Personaje::updateSp(){
 void Personaje::takedamage(uint8_t dano){
   if(health> dano)health = health - dano;
   else health = 0;
-  if(health>0)FillRect((HBposx+health),HBposy,100-health,30,0x00); //colorea poco a poco la barra de vida para simular daño
-  else FillRect(HBposx,HBposy,100,30,0x00);
+  if(health>0)FillRect((HBposx+health),HBposy,100-health,16,0x00); //colorea poco a poco la barra de vida para simular daño
+  else FillRect(HBposx,HBposy,100,16,0x00);
   }
