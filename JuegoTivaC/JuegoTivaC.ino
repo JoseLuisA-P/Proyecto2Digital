@@ -217,6 +217,12 @@ void printIcon(){ //imprimir los iconos de ataque, vida y otros de la pantalla
     bitmapSD(lectura,16,16,14,30);
     bitmapSD(lectura,16,16,184,30);
     lectura.close();
+
+    lectura = SD.open("ATKPH.TXT",FILE_READ);
+    bitmapSD(lectura,30,30,30,160);
+    bitmapSD(lectura,30,30,60,160);
+    bitmapSD(lectura,30,30,90,160);
+    lectura.close();
     
   }
 
