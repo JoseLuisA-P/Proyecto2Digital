@@ -20,6 +20,7 @@ class Personaje{
     void init(); //imprime la barra de salud
     void updateSp(); //actualizar el sprite del personaje para crear el movimiento
     void takedamage(uint8_t dano); //cuando el personaje recibe daño
+    void healdamage(uint8_t dano); //sanar al personaje
   };
 
 

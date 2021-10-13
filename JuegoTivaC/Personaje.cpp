@@ -133,3 +133,15 @@ void Personaje::takedamage(uint8_t dano){
   if(health>0)FillRect((HBposx+health),HBposy,100-health,16,0x00); //colorea poco a poco la barra de vida para simular daño
   else FillRect(HBposx,HBposy,100,16,0x00);
   }
+
+void Personaje::healdamage(uint8_t dano){
+  if((100-health) > dano){
+    FillRect((HBposx+health),HBposy,dano,16,0xD0A2); //colorea poco a poco la barra de vida para simular aumento de vida
+    health = health + dano;
+  }
+  else {
+    health = 100;
+    FillRect(HBposx,HBposy,100,16,0xD0A2);
+  }
+  
+  }

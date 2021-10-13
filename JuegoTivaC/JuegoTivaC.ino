@@ -18,6 +18,7 @@ short P1sel, P2sel; //seleccionar los personajes y atributos de cada uno
 uint8_t atckVal; //valor del ataque tipo random
 short turno;//seleccionar el turno del personaje
 short skip1, skip2; //para saltar turno de personaje 1 o 2
+short cool1, cool2; //cooldown de habilidad especial de personaje 1 o 2
 
 void setup() {
   Serial.begin(9600);
@@ -141,7 +142,8 @@ void loop() {
       switch(turno){
         case 0: //el personaje 1 puede atacar
           if(skip1 == 2){ //luego de saltar el turno, ataca y salta turno
-            atckVal = random(10,50); //valores aleatorios de ataque normal
+            if(player1.health > 30)atckVal = random(20,50); //valores aleatorios de ataque normal
+            if(player1.health < 30)atckVal = random(30,60);
             player1.pose = 4;
             player1.updateSp();
             player2.pose = 3;
@@ -155,7 +157,7 @@ void loop() {
           if(skip1 == 1){ //salta el turno e indica quien debe de cambiar
             skip1 = 2;
             LCD_Print("SKIPPED P1",100,90,1,0x0000,0x62AA);
-            delay(500);
+            delay(1000);
             FillRect(100,90,100,30,0x62AA);
             turno = 1;
             }
@@ -177,6 +179,9 @@ void loop() {
               turno = 1;
               break;
             case '3':
+              uint8_t san1 = random(12,21);
+              player1.healdamage(san1);
+              updateLife();
               turno = 1;  
               break;
             }
@@ -184,8 +189,9 @@ void loop() {
           break;
           
         case 1: //el personaje 2 puede atacar
-            if(skip2 == 2){
-            atckVal = random(10,50); //valores aleatorios de ataque normal
+            if(skip2 == 2){ //luego de saltar el turno, ataca y salta turno
+            if(player2.health > 30)atckVal = random(20,50); //valores aleatorios de ataque normal
+            if(player2.health < 30)atckVal = random(30,60);
             player2.pose = 4;
             player2.updateSp();
             player1.pose = 3;
@@ -197,10 +203,10 @@ void loop() {
             turno = 0;
             }
             
-            if(skip2 == 1){
+            if(skip2 == 1){//salta el turno e indica quien debe de cambiar
             skip2 = 2;
             LCD_Print("SKIPPED P2",100,90,1,0x0000,0x62AA);
-            delay(500);
+            delay(1000);
             FillRect(100,90,100,30,0x62AA);
             turno = 0;
             }
@@ -223,6 +229,9 @@ void loop() {
               turno = 0;
               break;
             case '6':
+              uint8_t san2 = random(12,21);
+              player2.healdamage(san2);
+              updateLife();
               turno = 0;
               break;
             }
