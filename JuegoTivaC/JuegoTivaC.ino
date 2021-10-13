@@ -10,13 +10,14 @@ Personaje player2(2,200,30,200,120); //objeto del personaje 2
 File lectura; //para leer un archivo de la SD
 uint8_t animacion = 0; //mover las animaciones de los personajes
 uint8_t mensel = 0; //seleccionar el menu
-bool onete; //utilizado para activar los eventos de una sola vez
+bool onete, onete2; //utilizado para activar los eventos de una sola vez
 unsigned long prevTime = 0; //para el delay sin detener la ejecucion
 int intervalo; //intervalo para los cambios de bitmap en los personajes o titulos que titilan
 int inMes; //mensaje obtenido por el serial
 short P1sel, P2sel; //seleccionar los personajes y atributos de cada uno
-short atck1,atck2; //seleccionar los ataques de los personajes
 uint8_t atckVal; //valor del ataque tipo random
+short turno;//seleccionar el turno del personaje
+short skip1, skip2; //para saltar turno de personaje 1 o 2
 
 void setup() {
   Serial.begin(9600);
@@ -105,7 +106,7 @@ void loop() {
           updateLife();
           inMes = 0;
           intervalo = 200;
-          animacion = 0;
+          onete = 1;
           }
         else inMes = 0;
       break;
@@ -115,37 +116,121 @@ void loop() {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     case 2: //pantalla de la pelea 
-      randomSeed(prevTime);
-      atckVal = random(10,15);
-      player1.updateSp();
+      randomSeed(prevTime%10); //generar valores aleatorios variados
+      if(onete){ //asegurar las poses como las iniciales
+        onete = 0; 
+        animacion  = 0;
+        player1.pose = animacion;
+        player2.pose = animacion;
+        short turnodec = random(1,11);
+        if(turnodec<5) turno = 0;
+        if(turnodec>5) turno = 1;
+        }
+     
+      player1.updateSp(); //actualizar la posicion de los personajes
       player2.updateSp();
-      player1.pose = animacion;
+      player1.pose = animacion; //actualizar a los nuevos valores
       player2.pose = animacion;
-      if(animacion > 1) animacion = 0;
+      if(animacion > 1) animacion = 0; //no pasarse de las posiciones de los personajes
       if(Serial.available()){ //leer el dato enviado por el control
         inMes = Serial.read();
-      switch(inMes){
-      case '5':
-        player2.pose = 4;
-        player2.updateSp();
-        player1.pose = 3;
-        player1.updateSp();
-        player1.takedamage(atckVal);
-        updateLife();
-        delay(200);
-        break;
-      case '6':
-        player1.pose = 4;
-        player1.updateSp();
-        player2.pose = 3;
-        player2.updateSp();
-        player2.takedamage(atckVal);
-        updateLife();
-        delay(200);
-        break;
-      }
+        }
+      if(!turno) LCD_Print("Turno P1",100,70,2,0x0000,0x62AA); //indicar el turno de los personajes
+      else LCD_Print("Turno P2",100,70,2,0x0000,0x62AA);
+      
+      switch(turno){
+        case 0: //el personaje 1 puede atacar
+          if(skip1 == 2){ //luego de saltar el turno, ataca y salta turno
+            atckVal = random(10,50); //valores aleatorios de ataque normal
+            player1.pose = 4;
+            player1.updateSp();
+            player2.pose = 3;
+            player2.updateSp();
+            player2.takedamage(atckVal);
+            updateLife();
+            delay(500);
+            skip1 = 0;
+            turno = 1;
+            }
+          if(skip1 == 1){ //salta el turno e indica quien debe de cambiar
+            skip1 = 2;
+            LCD_Print("SKIPPED P1",100,90,1,0x0000,0x62AA);
+            delay(500);
+            FillRect(100,90,100,30,0x62AA);
+            turno = 1;
+            }
+          if(skip1 == 0){
+          switch(inMes){
+            case '1':
+              atckVal = random(10,15); //valores aleatorios de ataque normal
+              player1.pose = 4;
+              player1.updateSp();
+              player2.pose = 3;
+              player2.updateSp();
+              player2.takedamage(atckVal);
+              updateLife();
+              delay(200);
+              turno = 1;
+              break;
+            case '2':
+              skip1 = 1;
+              turno = 1;
+              break;
+            case '3':
+              turno = 1;  
+              break;
+            }
+          }
+          break;
+          
+        case 1: //el personaje 2 puede atacar
+            if(skip2 == 2){
+            atckVal = random(10,50); //valores aleatorios de ataque normal
+            player2.pose = 4;
+            player2.updateSp();
+            player1.pose = 3;
+            player1.updateSp();
+            player1.takedamage(atckVal);
+            updateLife();
+            delay(500);
+            skip2 = 0;
+            turno = 0;
+            }
+            
+            if(skip2 == 1){
+            skip2 = 2;
+            LCD_Print("SKIPPED P2",100,90,1,0x0000,0x62AA);
+            delay(500);
+            FillRect(100,90,100,30,0x62AA);
+            turno = 0;
+            }
+            
+           if(skip2 == 0){
+            switch(inMes){
+            case '4':
+              atckVal = random(10,15); //valores aleatorios de ataque normal
+              player2.pose = 4;
+              player2.updateSp();
+              player1.pose = 3;
+              player1.updateSp();
+              player1.takedamage(atckVal);
+              updateLife();
+              delay(200);
+              turno = 0;
+              break;
+            case '5':
+              skip2 = 1;
+              turno = 0;
+              break;
+            case '6':
+              turno = 0;
+              break;
+            }
+          }
+          break;
+        }
+      
       inMes = 0;
-      }
 
       if(player1.health == 0)mensel = 3;
       if(player2.health == 0)mensel = 4;
@@ -181,6 +266,7 @@ void loop() {
         LCD_Clear(0x62AA);
         player1.health = 100;
         player2.health = 100;
+        onete = 1;
       }
       else inMes = 0;
       
@@ -219,9 +305,12 @@ void printIcon(){ //imprimir los iconos de ataque, vida y otros de la pantalla
     lectura.close();
 
     lectura = SD.open("ATKPH.TXT",FILE_READ);
-    bitmapSD(lectura,30,30,30,160);
+    bitmapSD(lectura,30,30,20,160);
     bitmapSD(lectura,30,30,60,160);
-    bitmapSD(lectura,30,30,90,160);
+    bitmapSD(lectura,30,30,100,160);
+    bitmapSD(lectura,30,30,190,160);
+    bitmapSD(lectura,30,30,230,160);
+    bitmapSD(lectura,30,30,270,160);
     lectura.close();
     
   }
