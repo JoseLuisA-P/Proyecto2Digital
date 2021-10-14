@@ -18,7 +18,7 @@ short P1sel, P2sel; //seleccionar los personajes y atributos de cada uno
 uint8_t atckVal; //valor del ataque tipo random
 short turno;//seleccionar el turno del personaje
 short skip1, skip2; //para saltar turno de personaje 1 o 2
-short cool1, cool2; //cooldown de habilidad especial de personaje 1 o 2
+short healtick1,healtick2; //cooldown de habilidad especial de personaje 1 o 2
 
 void setup() {
   Serial.begin(9600);
@@ -108,6 +108,8 @@ void loop() {
           inMes = 0;
           intervalo = 200;
           onete = 1;
+          healtick1 = 3;
+          healtick2 = 3;
           }
         else inMes = 0;
       break;
@@ -179,10 +181,14 @@ void loop() {
               turno = 1;
               break;
             case '3':
-              uint8_t san1 = random(12,21);
-              player1.healdamage(san1);
-              updateLife();
-              turno = 1;  
+              uint8_t san1 = random(12,21); //valor aleatorio para curar
+              if(healtick1 > 0){ //solamente si aun puede seguir curando
+                player1.healdamage(san1); //sanar al personaje y actualizar barra de vida
+                updateLife(); //actualizar la vida numerica
+                healtick1--; //disminuir las veces para curar
+                updateHealing1(healtick1); //actualizar el indicador para curar
+                turno = 1;
+              }  
               break;
             }
           }
@@ -230,9 +236,13 @@ void loop() {
               break;
             case '6':
               uint8_t san2 = random(12,21);
+              if(healtick2 > 0){
               player2.healdamage(san2);
               updateLife();
+              healtick2--;
+              updateHealing2(healtick2);
               turno = 0;
+              }
               break;
             }
           }
@@ -308,20 +318,27 @@ void printPlayers(){ //Colocar los bitmaps de los personajes en la pantalla
   }
 
 void printIcon(){ //imprimir los iconos de ataque, vida y otros de la pantalla
-    lectura = SD.open("HPICON.TXT", FILE_READ);
+    lectura = SD.open("HPICON.TXT", FILE_READ); //iconos de salud del persoaje
     bitmapSD(lectura,16,16,14,30);
     bitmapSD(lectura,16,16,184,30);
     lectura.close();
 
-    lectura = SD.open("ATKPH.TXT",FILE_READ);
-    bitmapSD(lectura,30,30,20,160);
+    lectura = SD.open("ATKPH.TXT",FILE_READ); //Place holder de los iconos de ataque
+    bitmapSD(lectura,30,30,20,160); 
     bitmapSD(lectura,30,30,60,160);
     bitmapSD(lectura,30,30,100,160);
     bitmapSD(lectura,30,30,190,160);
     bitmapSD(lectura,30,30,230,160);
     bitmapSD(lectura,30,30,270,160);
     lectura.close();
+
+    FillRect(20,190,30,16, 0X4FC7); //barras de salud para curar al personaje 1
+    FillRect(60,190,30,16, 0X4FC7);
+    FillRect(100,190,30,16, 0X4FC7);
     
+    FillRect(190,190,30,16, 0X4FC7); //barras de salud para curar al personaje 2
+    FillRect(230,190,30,16, 0X4FC7);
+    FillRect(270,190,30,16, 0X4FC7);
   }
 
 void updateLife(){ //actualizar los valores de vida en cada ataque
@@ -362,6 +379,34 @@ void choosePlayers(){
     case 1: //seleccionar el primer personaje
       Rect(200,60,32,32,0xE841);
       Rect(200,120,32,32,0x00);
+      break;
+    }
+  }
+
+void updateHealing1(short estado){
+  switch(estado){
+      case 2:
+      FillRect(100,190,30,16, 0X0000);
+      break;
+      case 1: 
+      FillRect(60,190,30,16, 0X0000);
+      break;
+      case 0:
+      FillRect(20,190,30,16, 0X0000);
+      break;
+    }
+  }
+
+void updateHealing2(short estado){
+  switch(estado){
+      case 2:
+      FillRect(270,190,30,16, 0X0000);
+      break;
+      case 1: 
+      FillRect(230,190,30,16, 0X0000);
+      break;
+      case 0:
+      FillRect(190,190,30,16, 0X0000);
       break;
     }
   }
