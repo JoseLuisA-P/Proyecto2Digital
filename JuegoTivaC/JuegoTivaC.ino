@@ -162,6 +162,8 @@ void loop() {
           if(skip1 == 0){
           switch(inMes){
             case '1':
+              updateSelAtk(0);
+              delay(200);
               atckVal = random(10,15); //valores aleatorios de ataque normal
               rutinaAtaque1(atckVal); //rutina de daño a P2 y animacion P1
               updateLife();
@@ -169,10 +171,14 @@ void loop() {
               turno = 1;
               break;
             case '2':
+              updateSelAtk(1);
+              delay(200);
               skip1 = 1;
               turno = 1;
               break;
             case '3':
+              updateSelAtk(2);
+              delay(200);
               uint8_t san1 = random(12,21); //valor aleatorio para curar
               if(healtick1 > 0){ //solamente si aun puede seguir curando
                 player1.healdamage(san1); //sanar al personaje y actualizar barra de vida
@@ -208,6 +214,8 @@ void loop() {
            if(skip2 == 0){
             switch(inMes){
             case '4':
+              updateSelAtk(3);
+              delay(200);
               atckVal = random(10,15); //valores aleatorios de ataque normal
               rutinaAtaque2(atckVal); //rutina de daño a P1 y animacion P2
               updateLife();
@@ -215,10 +223,14 @@ void loop() {
               turno = 0;
               break;
             case '5':
+              updateSelAtk(4);
+              delay(200);
               skip2 = 1;
               turno = 0;
               break;
             case '6':
+              updateSelAtk(5);
+              delay(200);
               uint8_t san2 = random(12,21);
               if(healtick2 > 0){
               player2.healdamage(san2);
@@ -368,6 +380,7 @@ void choosePlayers(){
   }
 
 void updateHealing1(short estado){
+  //actualizar cuantas oportunidades para sanar quedan luego de haber utilizado el ataque para sanar.
   switch(estado){
       case 2:
       FillRect(100,190,30,16, 0X0000);
@@ -382,6 +395,7 @@ void updateHealing1(short estado){
   }
 
 void updateHealing2(short estado){
+  //actualizar cuantas oportunidades para sanar quedan luego de haber utilizado el ataque para sanar.
   switch(estado){
       case 2:
       FillRect(270,190,30,16, 0X0000);
@@ -395,7 +409,9 @@ void updateHealing2(short estado){
     }
   }
 
-void rutinaAtaque1(uint8_t ataque){
+void rutinaAtaque1(uint8_t ataque){ 
+  //Rutina de ataques de P1, animacion de golpe P1 y recibir golpe P2, actualizar vida de P2 acorde al daño y la vida desplegada
+  //asi como la barra de salud.
     player1.pose = 4;
     player1.updateSp();
     player2.pose = 3;
@@ -404,9 +420,52 @@ void rutinaAtaque1(uint8_t ataque){
   }
 
 void rutinaAtaque2(uint8_t ataque){
+  //Rutina de ataques de P2, animacion de golpe P2 y recibir golpe P1, actualizar vida de P1 acorde al daño y la vida desplegada
+  //asi como la barra de salud.
     player2.pose = 4;
     player2.updateSp();
     player1.pose = 3;
     player1.updateSp();
     player1.takedamage(atckVal);
   }
+
+void updateSelAtk(short actualizar){
+  switch(actualizar){
+    case 0: //seleccionar primer ataque personaje 1
+    Rect(20,160,30,30,0xE841);
+    Rect(60,160,30,30,0x00);
+    Rect(100,160,30,30,0x00);
+    break;
+    
+    case 1: //seleccionar segundo ataque personaje 1
+    Rect(20,160,30,30,0x00);
+    Rect(60,160,30,30,0xE841);
+    Rect(100,160,30,30,0x00);
+    break;
+    
+    case 2: //seleccionar curacion personaje 1
+    Rect(20,160,30,30,0x00);
+    Rect(60,160,30,30,0x00);
+    Rect(100,160,30,30,0xE841);
+    break;
+    
+    case 3://seleccionar primer ataque personaje 2
+    Rect(190,160,30,30,0xE841);
+    Rect(230,160,30,30,0x00);
+    Rect(270,160,30,30,0x00);
+    break;
+    
+    case 4://seleccionar segundo ataque personaje 2
+    Rect(190,160,30,30,0x00);
+    Rect(230,160,30,30,0xE841);
+    Rect(270,160,30,30,0x00);
+    break;
+
+    case 5://seleccionar curacion personaje 2
+    Rect(190,160,30,30,0x00);
+    Rect(230,160,30,30,0x00);
+    Rect(270,160,30,30,0xE841);
+    break;
+    
+    }
+  }  
