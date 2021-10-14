@@ -146,11 +146,7 @@ void loop() {
           if(skip1 == 2){ //luego de saltar el turno, ataca y salta turno
             if(player1.health > 30)atckVal = random(20,50); //valores aleatorios de ataque normal
             if(player1.health < 30)atckVal = random(30,60);
-            player1.pose = 4;
-            player1.updateSp();
-            player2.pose = 3;
-            player2.updateSp();
-            player2.takedamage(atckVal);
+            rutinaAtaque1(atckVal); //rutina de daño a P2 y animacion P1
             updateLife();
             delay(500);
             skip1 = 0;
@@ -167,11 +163,7 @@ void loop() {
           switch(inMes){
             case '1':
               atckVal = random(10,15); //valores aleatorios de ataque normal
-              player1.pose = 4;
-              player1.updateSp();
-              player2.pose = 3;
-              player2.updateSp();
-              player2.takedamage(atckVal);
+              rutinaAtaque1(atckVal); //rutina de daño a P2 y animacion P1
               updateLife();
               delay(200);
               turno = 1;
@@ -196,36 +188,28 @@ void loop() {
           
         case 1: //el personaje 2 puede atacar
             if(skip2 == 2){ //luego de saltar el turno, ataca y salta turno
-            if(player2.health > 30)atckVal = random(20,50); //valores aleatorios de ataque normal
-            if(player2.health < 30)atckVal = random(30,60);
-            player2.pose = 4;
-            player2.updateSp();
-            player1.pose = 3;
-            player1.updateSp();
-            player1.takedamage(atckVal);
-            updateLife();
-            delay(500);
-            skip2 = 0;
-            turno = 0;
+              if(player2.health > 30)atckVal = random(20,50); //valores aleatorios de ataque normal
+              if(player2.health < 30)atckVal = random(30,60);
+              rutinaAtaque2(atckVal);//rutina de daño a P1 y animacion P2
+             updateLife();
+              delay(500);
+              skip2 = 0;
+              turno = 0;
             }
             
             if(skip2 == 1){//salta el turno e indica quien debe de cambiar
-            skip2 = 2;
-            LCD_Print("SKIPPED P2",100,90,1,0x0000,0x62AA);
-            delay(1000);
-            FillRect(100,90,100,30,0x62AA);
-            turno = 0;
+              skip2 = 2;
+              LCD_Print("SKIPPED P2",100,90,1,0x0000,0x62AA);
+              delay(1000);
+              FillRect(100,90,100,30,0x62AA);
+              turno = 0;
             }
             
            if(skip2 == 0){
             switch(inMes){
             case '4':
               atckVal = random(10,15); //valores aleatorios de ataque normal
-              player2.pose = 4;
-              player2.updateSp();
-              player1.pose = 3;
-              player1.updateSp();
-              player1.takedamage(atckVal);
+              rutinaAtaque2(atckVal); //rutina de daño a P1 y animacion P2
               updateLife();
               delay(200);
               turno = 0;
@@ -409,4 +393,20 @@ void updateHealing2(short estado){
       FillRect(190,190,30,16, 0X0000);
       break;
     }
+  }
+
+void rutinaAtaque1(uint8_t ataque){
+    player1.pose = 4;
+    player1.updateSp();
+    player2.pose = 3;
+    player2.updateSp();
+    player2.takedamage(ataque);
+  }
+
+void rutinaAtaque2(uint8_t ataque){
+    player2.pose = 4;
+    player2.updateSp();
+    player1.pose = 3;
+    player1.updateSp();
+    player1.takedamage(atckVal);
   }
