@@ -4,7 +4,7 @@
 
 File lectura2;
 //constructor
-Personaje::Personaje(uint8_t Numb, uint8_t HBposx, uint8_t HBposy, uint8_t Posx, uint8_t Posy){
+Personaje::Personaje(uint8_t Numb, uint8_t HBposx, uint8_t HBposy,unsigned int Posx,unsigned int Posy){
   //indica que el atributo es el mismo que lo declarado en el inicio
   this -> Numb = Numb;
   this -> HBposx = HBposx;
@@ -24,13 +24,14 @@ void Personaje::updateSp(){
   const char* dato2 = "Frame2.TXT";
   const char* dato3 = "P1S1UP.TXT";
   const char* dato4 = "P1S1DW.TXT";
-  const char* dato5 = "P2S2UP.TXT";
-  const char* dato6 = "P2S2DW.TXT";
-  const char* dato7 = "P1S1DAM.TXT";
-  const char* dato8 = "P1S1HIT.TXT";
-  const char* dato9 = "P1S2UP.TXT";
-  const char* dato10 = "P1S2DW.TXT";
-  const char* dato11 = "P1S2HIT.TXT";
+  const char* dato5 = "NINA1.TXT";
+  const char* dato6 = "NINA2.TXT";
+  const char* dato7 = "NINADAM.TXT";
+  const char* dato8 = "NINAHIT.TXT";
+  const char* dato9 = "NINO1.TXT";
+  const char* dato10 = "NINO2.TXT";
+  const char* dato11 = "NINOHIT.TXT";
+  const char* dato12 = "NINODAM.TXT";
   
   switch(Numb+skinsel){
   
@@ -65,7 +66,7 @@ void Personaje::updateSp(){
       lectura2.close();
     break;
     case 3: //recibe daño
-      lectura2 = SD.open(dato7, FILE_READ);
+      lectura2 = SD.open(dato12, FILE_READ);
       spriteSD(lectura2,Posx,Posy);
       lectura2.close();
       break;
@@ -98,17 +99,17 @@ void Personaje::updateSp(){
   case 3:  //skin 2 del personaje 2
    
   switch(pose){
-    case 0:
+    case 0: //pose 1
       lectura2 = SD.open(dato5, FILE_READ);
       spriteSD(lectura2,Posx,Posy);
       lectura2.close();
     break;
-    case 1:
+    case 1: //pose 2
       lectura2 = SD.open(dato6, FILE_READ);
       spriteSD(lectura2,Posx,Posy);
       lectura2.close();
     break;
-    case 3:
+    case 3: //recibe daño
       lectura2 = SD.open(dato7, FILE_READ);
       spriteSD(lectura2,Posx,Posy);
       lectura2.close();

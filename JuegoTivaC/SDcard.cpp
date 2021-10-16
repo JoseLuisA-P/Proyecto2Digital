@@ -65,7 +65,7 @@ void spriteSD(File f,unsigned int x,unsigned int y){
   LCD_CMD(0x02c); //write_memory_start
   digitalWrite(LCD_RS, HIGH);
   digitalWrite(LCD_CS, LOW);
-  uint8_t x2,y2;
+  unsigned int x2,y2;
   x2 = x+31;
   y2 = y+31;
   SetWindows(x,y,x2,y2); //para indicar que escribe en toda la pantalla

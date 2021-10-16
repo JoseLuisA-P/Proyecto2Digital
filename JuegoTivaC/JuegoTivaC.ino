@@ -4,8 +4,8 @@
 #include <SD.h>
 #include "Personaje.h"
 
-Personaje player1(0,30,30,30,120); //objeto del personaje 1
-Personaje player2(2,200,30,200,120); //objeto del personaje 2
+Personaje player1(0,30,30,60,120); //objeto del personaje 1
+Personaje player2(2,200,30,225,120); //objeto del personaje 2
 
 File lectura; //para leer un archivo de la SD
 uint8_t animacion = 0; //mover las animaciones de los personajes
@@ -132,8 +132,10 @@ void loop() {
      
       player1.updateSp(); //actualizar la posicion de los personajes
       player2.updateSp();
-      player1.pose = animacion; //actualizar a los nuevos valores
-      player2.pose = animacion;
+      if(skip1 == 0)player1.pose = animacion; //actualizar a los nuevos valores
+      else player1.pose = 1; //carga del ataque
+      if(skip2 == 0)player2.pose = animacion;
+      else player2.pose = 1; //carga del ataque
       if(animacion > 1) animacion = 0; //no pasarse de las posiciones de los personajes
       if(Serial.available()){ //leer el dato enviado por el control
         inMes = Serial.read();
@@ -197,7 +199,7 @@ void loop() {
               if(player2.health > 30)atckVal = random(20,50); //valores aleatorios de ataque normal
               if(player2.health < 30)atckVal = random(30,60);
               rutinaAtaque2(atckVal);//rutina de daño a P1 y animacion P2
-             updateLife();
+              updateLife();
               delay(500);
               skip2 = 0;
               turno = 0;
@@ -295,11 +297,11 @@ void loop() {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void printPlayers(){ //Colocar los bitmaps de los personajes en la pantalla
-      lectura = SD.open("P1S2DW.TXT", FILE_READ);
+      lectura = SD.open("NINO1.TXT", FILE_READ);
       spriteSD(lectura,100,60);
       lectura.close();
 
-      lectura = SD.open("P2S2UP.TXT", FILE_READ);
+      lectura = SD.open("NINA1.TXT", FILE_READ);
       spriteSD(lectura,200,60);
       lectura.close();
 
