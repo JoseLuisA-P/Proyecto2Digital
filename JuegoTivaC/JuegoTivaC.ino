@@ -19,6 +19,7 @@ uint8_t atckVal; //valor del ataque tipo random
 short turno;//seleccionar el turno del personaje
 short skip1, skip2; //para saltar turno de personaje 1 o 2
 short healtick1,healtick2; //cooldown de habilidad especial de personaje 1 o 2
+bool ganador; //para ver quien es el ganador
 
 void setup() {
   Serial.begin(9600);
@@ -101,6 +102,9 @@ void loop() {
         if (inMes == '9'){
           mensel = 2;
           LCD_Clear(0x62AA);
+          lectura = SD.open("FONPEL.TXT", FILE_READ); //FONDO DE LA PELEA
+          bitmapSD(lectura,320,240,0,0);
+          lectura.close();
           player1.init();
           player2.init();
           printIcon();
@@ -140,8 +144,8 @@ void loop() {
       if(Serial.available()){ //leer el dato enviado por el control
         inMes = Serial.read();
         }
-      if(!turno) LCD_Print("Turno P1",100,70,2,0x0000,0x62AA); //indicar el turno de los personajes
-      else LCD_Print("Turno P2",100,70,2,0x0000,0x62AA);
+      if(!turno) LCD_Print("Turno P1",100,82,2,0x0000,0xFFFF); //indicar el turno de los personajes
+      else LCD_Print("Turno P2",100,82,2,0x0000,0xFFFF);
       
       switch(turno){
         case 0: //el personaje 1 puede atacar
@@ -156,9 +160,9 @@ void loop() {
             }
           if(skip1 == 1){ //salta el turno e indica quien debe de cambiar
             skip1 = 2;
-            LCD_Print("SKIPPED P1",100,90,1,0x0000,0x62AA);
+            FillRect(100,82,200,20,0xFFFF);
+            LCD_Print("P1 SKIP",110,82,2,0x0000,0xFFFF);
             delay(1000);
-            FillRect(100,90,100,30,0x62AA);
             turno = 1;
             }
           if(skip1 == 0){
@@ -207,9 +211,9 @@ void loop() {
             
             if(skip2 == 1){//salta el turno e indica quien debe de cambiar
               skip2 = 2;
-              LCD_Print("SKIPPED P2",100,90,1,0x0000,0x62AA);
+              FillRect(100,82,200,20,0xFFFF);
+              LCD_Print("P2 SKIP",110,82,2,0x0000,0xFFFF);
               delay(1000);
-              FillRect(100,90,100,30,0x62AA);
               turno = 0;
             }
             
@@ -258,26 +262,36 @@ void loop() {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     case 3:
-      LCD_Clear(0x62AA);
-      LCD_Print("Gano2",100,120,2,0x00,0x62AA);
+      LCD_Clear(0x0000);
+      LCD_Print("GANADOR P2",80,30,2,0xFFFF,0x0000);
       mensel = 5;
+      ganador = 1;
       intervalo = 500;
+      lectura = SD.open("NINA1.TXT", FILE_READ);
+      spriteSD(lectura,150,100);
+      lectura.close();
       break;
     case 4:
-      LCD_Clear(0x62AA);
-      LCD_Print("Gano1",100,120,2,0x00,0x62AA);
+      LCD_Clear(0x0000);
+      LCD_Print("GANADOR P1",80,30,2,0xFFFF,0x0000);
       mensel = 5;
+      ganador = 0;
       intervalo = 500;
+      lectura = SD.open("NINO1.TXT", FILE_READ);
+      spriteSD(lectura,150,100);
+      lectura.close();
       break;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
  //pantalla de reinicio y para reiniciar los parametros de los jugadores
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     case 5:
-      if(animacion)LCD_Print("Presiona start volver",30,150,1,0x0000,0x62AA);
-      else FillRect(30,150,250,30,0x62AA); //animacion del texto de presionar START para ir a seleccion de personajes
+      if(animacion)LCD_Print("Presiona start volver",80,150,1,0xFFFF,0x0000);
+      else FillRect(30,150,250,30,0x0000); //animacion del texto de presionar START para ir a seleccion de personajes
       if(animacion > 1) animacion = 0;
       if(Serial.available()) inMes = Serial.read();
 
+      updateWinner(animacion);
+      
       if(inMes == '1'){
         mensel = 0;
         LCD_Clear(0x62AA);
@@ -330,13 +344,21 @@ void printIcon(){ //imprimir los iconos de ataque, vida y otros de la pantalla
     bitmapSD(lectura,30,30,270,160);
     lectura.close();
 
-    FillRect(20,190,30,16, 0X4FC7); //barras de salud para curar al personaje 1
-    FillRect(60,190,30,16, 0X4FC7);
-    FillRect(100,190,30,16, 0X4FC7);
+    FillRect(18,194,34,20,0X4AC7); //diferenciadores de salud de personaje
+    FillRect(58,194,34,20, 0X4AC7);
+    FillRect(98,194,34,20, 0X4AC7);
     
-    FillRect(190,190,30,16, 0X4FC7); //barras de salud para curar al personaje 2
-    FillRect(230,190,30,16, 0X4FC7);
-    FillRect(270,190,30,16, 0X4FC7);
+    FillRect(20,196,30,16, 0X4FC7); //barras de salud para curar al personaje 1
+    FillRect(60,196,30,16, 0X4FC7);
+    FillRect(100,196,30,16, 0X4FC7);
+
+    FillRect(188,194,34,20,0X4AC7); //diferenciadores de salud de personaje
+    FillRect(228,194,34,20, 0X4AC7);
+    FillRect(268,194,34,20, 0X4AC7);
+    
+    FillRect(190,196,30,16, 0X4FC7); //barras de salud para curar al personaje 2
+    FillRect(230,196,30,16, 0X4FC7);
+    FillRect(270,196,30,16, 0X4FC7);
   }
 
 void updateLife(){ //actualizar los valores de vida en cada ataque
@@ -385,13 +407,13 @@ void updateHealing1(short estado){
   //actualizar cuantas oportunidades para sanar quedan luego de haber utilizado el ataque para sanar.
   switch(estado){
       case 2:
-      FillRect(100,190,30,16, 0X0000);
+      FillRect(100,196,30,16, 0X0000);
       break;
       case 1: 
-      FillRect(60,190,30,16, 0X0000);
+      FillRect(60,196,30,16, 0X0000);
       break;
       case 0:
-      FillRect(20,190,30,16, 0X0000);
+      FillRect(20,196,30,16, 0X0000);
       break;
     }
   }
@@ -400,13 +422,13 @@ void updateHealing2(short estado){
   //actualizar cuantas oportunidades para sanar quedan luego de haber utilizado el ataque para sanar.
   switch(estado){
       case 2:
-      FillRect(270,190,30,16, 0X0000);
+      FillRect(270,196,30,16, 0X0000);
       break;
       case 1: 
-      FillRect(230,190,30,16, 0X0000);
+      FillRect(230,196,30,16, 0X0000);
       break;
       case 0:
-      FillRect(190,190,30,16, 0X0000);
+      FillRect(190,196,30,16, 0X0000);
       break;
     }
   }
@@ -471,3 +493,19 @@ void updateSelAtk(short actualizar){
     
     }
   }  
+
+void updateWinner(uint8_t estado){
+  switch(estado){
+    case 0:
+      lectura = SD.open("CROWN1.TXT", FILE_READ);
+      spriteSD(lectura,150,65);
+      lectura.close();
+    break;
+    case 1:
+      lectura = SD.open("CROWN2.TXT", FILE_READ);
+      spriteSD(lectura,150,65);
+      lectura.close();
+    break;
+    }
+  
+  }
