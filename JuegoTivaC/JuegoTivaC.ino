@@ -37,10 +37,14 @@ void setup() {
   LCD_Print("encontrado",55,55,1,0x0000,0xf4f4);
   delay(1000);
 
-  LCD_Clear(0x62AA);
+  LCD_Clear(0x0000);
+  LCD_Print("Integrantes:",30,30,2,0xffff,0x0000);
+  LCD_Print("Jose Alvarez",30,60,2,0xffff,0x0000);
+  LCD_Print("19392",30,90,2,0xffff,0x0000);
+  LCD_Print("Valerie Valdez",30,120,2,0xffff,0x0000);
+  LCD_Print("19659",30,150,2,0xffff,0x0000);
+  delay(5000);
   
-  //player1.init();
-  //player2.init();
   onete = 1; //evento de una vez inicializado
   intervalo = 500; //primer intervalo, se indicara el cambio en las pantallas de intermedio
 }
@@ -59,10 +63,15 @@ void loop() {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
     case 0: 
-      if(onete) { LCD_Print("Inicio del juego",30,50,2,0x0000,0x62AA); onete = 0;} //para imprimir una vez el texto de inicio
+      if(onete) { 
+        lectura = SD.open("OPSCREEN.TXT",FILE_READ);
+        bitmapSD(lectura,320,240,0,0);
+        lectura.close();
+        onete = 0;
+        } //para imprimir una vez el texto de inicio
       
-      if(animacion)LCD_Print("Presiona el boton para comenzar",30,150,1,0x0000,0x62AA);
-      else FillRect(30,150,250,30,0x62AA); //animacion del texto de presionar START para ir a seleccion de personajes
+      if(animacion)LCD_Print("Presiona el boton para comenzar",50,200,1,0xffff,0x0000);
+      else FillRect(50,200,250,30,0x0000); //animacion del texto de presionar START para ir a seleccion de personajes
       if(animacion > 1) animacion = 0; //dos estados para presionar, se modifica dependiendo la pantalla desplegada
 
       if(Serial.available()){ //leer el dato enviado por el control
@@ -76,13 +85,16 @@ void loop() {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       
     case 1:
-      if(!onete){  //preparando el evento de una vez para la pelea y colocando la pantalla de seleccion
-        LCD_Clear(0x62AA);
-        LCD_Print("SELECCIONA TU JUGADOR",80,30,1,0x0000,0x62AA);
+    
+      if(onete == 0){  //preparando el evento de una vez para la pelea y colocando la pantalla de seleccion
+        lectura = SD.open("SELPLAY.TXT",FILE_READ);
+        bitmapSD(lectura,320,240,0,0);
+        lectura.close();
         printPlayers();
         onete= 1; 
         inMes = 0;
         }
+        
       if(Serial.available()){ //leer el dato enviado por el control
         inMes = Serial.read();
         switch(inMes){ //dependiendo del valor seleccionado, asi cambia la seleccion del personaje
@@ -101,7 +113,7 @@ void loop() {
 
         if (inMes == '9'){
           mensel = 2;
-          LCD_Clear(0x62AA);
+          LCD_Clear(0x0000);
           lectura = SD.open("FONPEL.TXT", FILE_READ); //FONDO DE LA PELEA
           bitmapSD(lectura,320,240,0,0);
           lectura.close();
@@ -294,7 +306,7 @@ void loop() {
       
       if(inMes == '1'){
         mensel = 0;
-        LCD_Clear(0x62AA);
+        LCD_Clear(0x0000);
         player1.health = 100;
         player2.health = 100;
         onete = 1;
@@ -335,15 +347,21 @@ void printIcon(){ //imprimir los iconos de ataque, vida y otros de la pantalla
     bitmapSD(lectura,16,16,184,30);
     lectura.close();
 
-    lectura = SD.open("ATKPH.TXT",FILE_READ); //Place holder de los iconos de ataque
-    bitmapSD(lectura,30,30,20,160); 
-    bitmapSD(lectura,30,30,60,160);
-    bitmapSD(lectura,30,30,100,160);
-    bitmapSD(lectura,30,30,190,160);
-    bitmapSD(lectura,30,30,230,160);
-    bitmapSD(lectura,30,30,270,160);
-    lectura.close();
+    lectura = SD.open("NATK.TXT",FILE_READ);
+    bitmapSD(lectura,30,30,20,160); //ataque normal
+    bitmapSD(lectura,30,30,190,160); //ataque normal
+    lectura.close();    
 
+    lectura = SD.open("CATK.TXT",FILE_READ);
+    bitmapSD(lectura,30,30,60,160); //ataque cargado
+    bitmapSD(lectura,30,30,230,160); //ataque cargado
+    lectura.close();    
+
+    lectura = SD.open("HATK.TXT",FILE_READ);
+    bitmapSD(lectura,30,30,100,160); //sanarse
+    bitmapSD(lectura,30,30,270,160); //sanarse
+    lectura.close();    
+    
     FillRect(18,194,34,20,0X4AC7); //diferenciadores de salud de personaje
     FillRect(58,194,34,20, 0X4AC7);
     FillRect(98,194,34,20, 0X4AC7);
