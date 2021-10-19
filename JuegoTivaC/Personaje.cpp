@@ -32,22 +32,40 @@ void Personaje::updateSp(){
   const char* dato10 = "NINO2.TXT";
   const char* dato11 = "NINOHIT.TXT";
   const char* dato12 = "NINODAM.TXT";
+  const char* dato13 = "AZUL1.TXT";
+  const char* dato14 = "AZUL2.TXT";
+  const char* dato15 = "AZULHIT.TXT";
+  const char* dato16 = "AZULDAM.TXT";
+  const char* dato17 = "ROJO1.TXT";
+  const char* dato18 = "ROJO2.TXT";
+  const char* dato19 = "ROJOHIT.TXT";
+  const char* dato20 = "ROJODAM.TXT";
   
   switch(Numb+skinsel){
   
   case 0:  //skin 1 del personaje 1
    
   switch(pose){
-    case 0:
-      lectura2 = SD.open(dato1, FILE_READ);
+    case 0: //pose 1
+      lectura2 = SD.open(dato13, FILE_READ);
       spriteSD(lectura2,Posx,Posy);
       lectura2.close();
     break;
-    case 1:
-      lectura2 = SD.open(dato2, FILE_READ);
+    case 1: //pose 2
+      lectura2 = SD.open(dato14, FILE_READ);
       spriteSD(lectura2,Posx,Posy);
       lectura2.close();
     break;
+    case 3: //recibe daño
+      lectura2 = SD.open(dato16, FILE_READ);
+      spriteSD(lectura2,Posx,Posy);
+      lectura2.close();
+      break;
+    case 4: //golpea
+      lectura2 = SD.open(dato15, FILE_READ);
+      spriteSD(lectura2,Posx,Posy);
+      lectura2.close();
+      break;
     }
     
   break;
@@ -82,16 +100,26 @@ void Personaje::updateSp(){
   case 2:  //skin 1 del personaje 2
    
   switch(pose){
-    case 0:
-      lectura2 = SD.open(dato1, FILE_READ);
+    case 0: //pose 1
+      lectura2 = SD.open(dato17, FILE_READ);
       spriteSD(lectura2,Posx,Posy);
       lectura2.close();
     break;
-    case 1:
-      lectura2 = SD.open(dato2, FILE_READ);
+    case 1: //pose 2
+      lectura2 = SD.open(dato18, FILE_READ);
       spriteSD(lectura2,Posx,Posy);
       lectura2.close();
     break;
+    case 3: //recibe daño
+      lectura2 = SD.open(dato20, FILE_READ);
+      spriteSD(lectura2,Posx,Posy);
+      lectura2.close();
+      break;
+    case 4: //golpea
+      lectura2 = SD.open(dato19, FILE_READ);
+      spriteSD(lectura2,Posx,Posy);
+      lectura2.close();
+      break;
     }
     
   break;

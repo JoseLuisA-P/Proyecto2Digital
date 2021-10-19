@@ -126,6 +126,8 @@ void loop() {
           onete = 1;
           healtick1 = 3;
           healtick2 = 3;
+          skip1 = 0;
+          skip2 = 0;
           }
         else inMes = 0;
       break;
@@ -279,7 +281,8 @@ void loop() {
       mensel = 5;
       ganador = 1;
       intervalo = 500;
-      lectura = SD.open("NINA1.TXT", FILE_READ);
+      if((2 + player2.skinsel) == 3)lectura = SD.open("NINA1.TXT", FILE_READ);
+      if((2 + player2.skinsel) == 2)lectura = SD.open("ROJO1.TXT", FILE_READ);
       spriteSD(lectura,150,100);
       lectura.close();
       break;
@@ -289,7 +292,8 @@ void loop() {
       mensel = 5;
       ganador = 0;
       intervalo = 500;
-      lectura = SD.open("NINO1.TXT", FILE_READ);
+      if((player1.skinsel) == 1)lectura = SD.open("NINO1.TXT", FILE_READ);
+      if((player1.skinsel) == 0)lectura = SD.open("AZUL1.TXT", FILE_READ);
       spriteSD(lectura,150,100);
       lectura.close();
       break;
@@ -331,11 +335,11 @@ void printPlayers(){ //Colocar los bitmaps de los personajes en la pantalla
       spriteSD(lectura,200,60);
       lectura.close();
 
-      lectura = SD.open("Frame1.TXT", FILE_READ);
+      lectura = SD.open("AZUL1.TXT", FILE_READ);
       spriteSD(lectura,100,120);
       lectura.close();
       
-      lectura = SD.open("Frame1.TXT", FILE_READ);
+      lectura = SD.open("ROJO1.TXT", FILE_READ);
       spriteSD(lectura,200,120);
       lectura.close();
   
