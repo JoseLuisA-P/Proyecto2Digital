@@ -23,6 +23,7 @@ bool ganador; //para ver quien es el ganador
 
 void setup() {
   Serial.begin(9600);
+  Serial3.begin(9600);
   LCD_Init();
   LCD_Clear(0xf4f4);
 
@@ -74,8 +75,8 @@ void loop() {
       else FillRect(50,200,250,30,0x0000); //animacion del texto de presionar START para ir a seleccion de personajes
       if(animacion > 1) animacion = 0; //dos estados para presionar, se modifica dependiendo la pantalla desplegada
 
-      if(Serial.available()){ //leer el dato enviado por el control
-        inMes = Serial.read();
+      if(Serial3.available()){ //leer el dato enviado por el control
+        inMes = Serial3.read();
         }
 
       if(inMes == '1')mensel = 1; //al presionar start cambia de pantalla
