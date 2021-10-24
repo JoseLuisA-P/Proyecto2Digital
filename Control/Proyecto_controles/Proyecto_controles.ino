@@ -106,7 +106,6 @@ void loop() {
            INICIO = 0;
            }
        }
-
        
 
 //                    P R I M E R   J U G A D O R
@@ -119,7 +118,7 @@ void loop() {
     else{
         if(FLAG == 1){                 // Si la FLAG está encendida entonces apgarla
            FLAG = 0;                   // Apagar bandera   
-           Serial.write('1');            // Se envía el dato ASCII = 1
+           Serial.write('1');          // Se envía el dato ASCII = 1
 
            tone(11,392);               // Tonos para el ataque normal
            delay(20);
@@ -140,7 +139,7 @@ void loop() {
     else{
         if(FLAG2 == 1){                // Si la FLAG está encendida entonces apgarla
            FLAG2 = 0;                  // Apagar bandera   
-           Serial.write('2');            // Se envía el dato ASCII = 2
+           Serial.write('2');          // Se envía el dato ASCII = 2
                      
            tone(11,50);                // Tonos para el ataque especial
            delay(7);
@@ -162,7 +161,7 @@ void loop() {
     else{
         if(FLAG3 == 1){                // Si la FLAG está encendida entonces apgarla
            FLAG3 = 0;                  // Apagar bandera   
-           Serial.write('3');            // Se envía el dato ASCII = 3
+           Serial.write('3');          // Se envía el dato ASCII = 3
 
              tone(11,1);               // Tono del otro especial
              tone(11,300);   
@@ -182,7 +181,7 @@ void loop() {
     else{
         if(FLAG4 == 1){                // Si la FLAG está encendida entonces apgarla
            FLAG4 = 0;                  // Apagar bandera   
-           Serial.write('4');            // Se envía el dato ASCII = 4
+           Serial.write('4');          // Se envía el dato ASCII = 4
            
            tone(12,392);               // Tonos para el ataque normal
            delay(20);
@@ -203,7 +202,7 @@ void loop() {
     else{
         if(FLAG5 == 1){                // Si la FLAG está encendida entonces apgarla
            FLAG5 = 0;                  // Apagar bandera   
-           Serial.write('5');            // Se envía el dato ASCII = 5
+           Serial.write('5');          // Se envía el dato ASCII = 5
            
            tone(12,50);                // Tonos para el ataque especial
            delay(7);
@@ -219,14 +218,14 @@ void loop() {
         }
 
 
-//        P A R A   R E C I B I R  E N   S E R I A L 
+//          P A R A   R E C I B I R  E N   S E R I A L 
     if (digitalRead(pushB6) == HIGH){   // Tercer botón: 2do El otro especial
         FLAG6 = 1;                      // Bandera para el antirrebote
           }
     else{
         if(FLAG6 == 1){                 // Si la FLAG está encendida entonces apgarla
            FLAG6 = 0;                   // Apagar bandera   
-           Serial.write('6');             // Se envía el dato ASCII = 6
+           Serial.write('6');           // Se envía el dato ASCII = 6
            
            tone(12,1);                  // Tono del otro especial
            tone(12,300);   
@@ -238,21 +237,241 @@ void loop() {
         }
 
 
-            if (Serial.available()){                      
-        Message = Serial.read();       // Guardar lo leído en Message
-        Serial.write(Message);         // Escribir lo que se recibe
-        delay(4);
-        if(Message == 49){             // Recibe un 1
-        INICIO = 1; 
+//             R E C I B I R    C O N    S E R I A L 
+    if (Serial.available()){                      
+       Message = Serial.read();        // Guardar lo leído en Message
+       Serial.write(Message);          // Escribir lo que se recibe
+       delay(4);
+       if(Message == 49){              // Recibe un 1
+       INICIO = 1; 
     }
     if(Message == 65){                 // Recibe un 1
-       tone(11,1);                     // Tono del otro especial
-       tone(11,300);  ; 
+      tone(11,392);                    // Tono del otro especial
+      delay(60);
+      noTone(11);
+      delay(100);
+      tone(11, 523.25);
+      delay(60);
+      noTone(11);
+      delay(60);
+      tone(11,659.26);
+      delay(60);
+      noTone(11);
+      delay(60);
+      tone(11,783.99);
+      delay(60);
+      noTone(11);
+      delay(60);
+      tone(11, 1046.25);
+      delay(60);
+      noTone(11);
+      delay(100);
+      tone(11, 1318.5);
+      delay(60);
+      noTone(11);
+      delay(60);
+      tone(11, 1568);
+      delay(250);
+      noTone(11);
+      delay(60);
+      tone(11, 1318.5);
+      delay(250);
+      noTone(11);
+      delay(60);
+    // Otra vez
+      tone(11,415.3);
+      delay(60);
+      noTone(11);
+      delay(100);
+      tone(11, 523.25);
+      delay(60);
+      noTone(11);
+      delay(60);
+      tone(11,622);
+      delay(60);
+      noTone(11);
+      delay(60);
+      tone(11,830.61);
+      delay(60);
+      noTone(11);
+      delay(60);
+      tone(11, 1046.25);
+      delay(60);
+      noTone(11);
+      delay(100);
+      tone(11, 1244.5);
+      delay(60);
+      noTone(11);
+      delay(60);
+      tone(11, 1661.2);
+      delay(250);
+      noTone(11);
+      delay(60);
+      tone(11, 1244.5);
+      delay(250);
+      noTone(11);
+      delay(60);
+      // Última parte
+      tone(11,466.16);
+      delay(60);
+      noTone(11);
+      delay(80);
+      tone(11, 587.33);
+      delay(60);
+      noTone(11);
+      delay(60);
+      tone(11,698.46);
+      delay(60);
+      noTone(11);
+      delay(60);
+      tone(11,932.33);
+      delay(60);
+      noTone(11);
+      delay(60);
+      tone(11, 1174.7);
+      delay(60);
+      noTone(11);
+      delay(100);
+      tone(11, 1396.9);
+      delay(60);
+      noTone(11);
+      delay(60);
+      tone(11, 1864.7);
+      delay(250);
+      noTone(11);
+      delay(60);
+      tone(11, 1864.7);
+      delay(75);
+      noTone(11);
+      delay(60);
+      tone(11, 1864.7);
+      delay(75);
+      noTone(11);
+      delay(60);
+      tone(11, 1864.7);
+      delay(65);
+      noTone(11);
+      delay(50);
+      tone(11, 2100);
+      delay(350);
+      noTone(11);
+      delay(60);
+      delay(1000);
     }
-    if(Message == 66){                 // Recibe un 1
-      tone(12,1);                      // Tono del otro especial
-      tone(12,300); ; 
+    
+    if(Message == 66){                 
+      tone(12,392);                    // Tono del otro especial
+      delay(60);
+      noTone(12);
+      delay(100);
+      tone(12, 523.25);
+      delay(60);
+      noTone(12);
+      delay(60);
+      tone(12,659.26);
+      delay(60);
+      noTone(12);
+      delay(60);
+      tone(12,783.99);
+      delay(60);
+      noTone(12);
+      delay(60);
+      tone(12, 1046.25);
+      delay(60);
+      noTone(12);
+      delay(100);
+      tone(12, 1318.5);
+      delay(60);
+      noTone(12);
+      delay(60);
+      tone(12, 1568);
+      delay(250);
+      noTone(12);
+      delay(60);
+      tone(12, 1318.5);
+      delay(250);
+      noTone(12);
+      delay(60);
+    // Otra vez
+      tone(12,415.3);
+      delay(60);
+      noTone(12);
+      delay(100);
+      tone(12, 523.25);
+      delay(60);
+      noTone(12);
+      delay(60);
+      tone(12,622);
+      delay(60);
+      noTone(12);
+      delay(60);
+      tone(12,830.61);
+      delay(60);
+      noTone(12);
+      delay(60);
+      tone(12, 1046.25);
+      delay(60);
+      noTone(12);
+      delay(100);
+      tone(12, 1244.5);
+      delay(60);
+      noTone(12);
+      delay(60);
+      tone(12, 1661.2);
+      delay(250);
+      noTone(12);
+      delay(60);
+      tone(12, 1244.5);
+      delay(250);
+      noTone(12);
+      delay(60);
+      // Última parte
+      tone(12,466.16);
+      delay(60);
+      noTone(12);
+      delay(80);
+      tone(12, 587.33);
+      delay(60);
+      noTone(12);
+      delay(60);
+      tone(12,698.46);
+      delay(60);
+      noTone(12);
+      delay(60);
+      tone(12,932.33);
+      delay(60);
+      noTone(12);
+      delay(60);
+      tone(12, 1174.7);
+      delay(60);
+      noTone(12);
+      delay(100);
+      tone(12, 1396.9);
+      delay(60);
+      noTone(12);
+      delay(60);
+      tone(12, 1864.7);
+      delay(250);
+      noTone(12);
+      delay(60);
+      tone(12, 1864.7);
+      delay(75);
+      noTone(12);
+      delay(60);
+      tone(12, 1864.7);
+      delay(75);
+      noTone(12);
+      delay(60);
+      tone(12, 1864.7);
+      delay(65);
+      noTone(12);
+      delay(50);
+      tone(12, 2100);
+      delay(350);
+      noTone(12);
+      delay(60);
+      delay(1000);
+      }
     }
-    }
-    }
+  }
 }
